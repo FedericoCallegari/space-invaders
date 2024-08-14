@@ -4,6 +4,11 @@ let invaders = [];
 let player
 let bullets = []
 
+let invaderBullets = [];
+let invanderShootingFrequency= 0.05;
+let maxInvaderBullets = 5;
+
+
 function preload(){
     // Code to run before the rest of the sketch.
     invaderImg = loadImage('invader.gif')
@@ -27,6 +32,7 @@ function draw(){
     //Show and move player bullets
     for( let i = bullets.length -1; i >= 0; i--){
         showBullet(bullets[i])
+        moveBullet(bullets[i])
     }
 
     let limit = false;
@@ -36,7 +42,22 @@ function draw(){
         if(invaders[i].x > width|| invaders[i].x < 0){
             limit = true;
         }
+        //Conditions for invaders fire
+        if(random(0, 1)< invanderShootingFrequency && invaderBullets.length < maxInvaderBullets){
+            let invaderbullet = createBullet(invaders[i].x, invaders[i].y)
+            invaderBullets.push(invaderbullet);
+        };
+    };
+
+    // SHOW AND MOVE INVADERS BULLETS
+    for( let i = invaderBullets.length -1; i >= 0; i--){
+        showBullet(invaderBullets[i])
+        moveInvaderBullet(invaderBullets[i])
+        if(invaderBullets[i].y > height){
+            invaderBullets.splice(i, 1)
+        }
     }
+
     if(limit){
         for(i = 0; i < invaders.length; i++){
             shiftInvadersDown(invaders[i]);
@@ -85,9 +106,17 @@ function createBullet(x, y){
 }
 
 function showBullet(bullet){
+    if(invaderBullets.includes(bullet)){
+        fill(118, 240, 19)
+    }else{
+        fill(255)
+    }
     ellipse(bullet.x, bullet.y, bullet.r * 2, bullet.r * 2)
 }
 
+function moveBullet(bullet){
+    bullet.y -= 7
+}
 // Invaders
 
 function createInvaders(x, y){
@@ -103,4 +132,7 @@ function moveInvaders(invader){
 function shiftInvadersDown(invader){
     invader.xdir *= -1
     invader.y += invader.r
+}
+function moveInvaderBullet(bullet){
+    bullet.y += 5;
 }
