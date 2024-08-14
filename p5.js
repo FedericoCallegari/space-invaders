@@ -23,8 +23,19 @@ function draw(){
     background(0);
     showPlayer(player);
     movePlayer(player)
+
+    let limit = false;
     for(i = 0; i < invaders.length; i++){
         showInvaders(invaders[i])
+        moveInvaders(invaders[i])
+        if(invaders[i].x > width|| invaders[i].x < 0){
+            limit = true;
+        }
+    }
+    if(limit){
+        for(i = 0; i < invaders.length; i++){
+            shiftInvadersDown(invaders[i]);
+        }
     }
 }
 
@@ -41,7 +52,7 @@ function showPlayer(player){
 
 function movePlayer(player){
     player.x += player.dir * 5
-    player.x = constrain(player.x)
+    player.x = constrain(player.x, 0, width - player.w)
 }
 
 function keyPressed(){
@@ -66,4 +77,11 @@ function createInvaders(x, y){
 
 function showInvaders(invader){
     image(invaderImg, invader.x, invader.y, invader.r, invader.r)
+}
+function moveInvaders(invader){
+    invader.x += invader.xdir
+}
+function shiftInvadersDown(invader){
+    invader.xdir *= -1
+    invader.y += invader.r
 }
