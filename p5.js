@@ -2,6 +2,7 @@ let invaderImg;
 let invaders = [];
 
 let player
+let bullets = []
 
 function preload(){
     // Code to run before the rest of the sketch.
@@ -22,7 +23,11 @@ function draw(){
     //Code to run repeatedly
     background(0);
     showPlayer(player);
-    movePlayer(player)
+    movePlayer(player);
+    //Show and move player bullets
+    for( let i = bullets.length -1; i >= 0; i--){
+        showBullet(bullets[i])
+    }
 
     let limit = false;
     for(i = 0; i < invaders.length; i++){
@@ -56,6 +61,12 @@ function movePlayer(player){
 }
 
 function keyPressed(){
+
+    if(keyCode === 32){
+        let bullet = createBullet(player.x + player.w / 2, player.y)
+        bullets.push(bullet)
+    }
+
     if(keyCode === LEFT_ARROW){
         player.dir = -1;
     }else if(keyCode === RIGHT_ARROW){
@@ -67,6 +78,14 @@ function keyReleased(){
     if(keyCode === RIGHT_ARROW || keyCode === LEFT_ARROW){
         player.dir = 0;
     }
+}
+
+function createBullet(x, y){
+    return {x:x, y:y , r:8 }
+}
+
+function showBullet(bullet){
+    ellipse(bullet.x, bullet.y, bullet.r * 2, bullet.r * 2)
 }
 
 // Invaders
