@@ -30,9 +30,16 @@ function draw(){
     showPlayer(player);
     movePlayer(player);
     //Show and move player bullets
-    for( let i = bullets.length -1; i >= 0; i--){
+    for( let i = bullets.length - 1; i >= 0; i--){
         showBullet(bullets[i])
         moveBullet(bullets[i])
+        for (let j = invaders.length - 1 ; j >= 0; j--){
+            if(bulletHitsInvader(bullets[i], invaders[j])){
+                invaders.splice(j, 1)
+                bullets.splice(i, 1)
+                break
+            }
+        }
     }
 
     let limit = false;
@@ -135,4 +142,8 @@ function shiftInvadersDown(invader){
 }
 function moveInvaderBullet(bullet){
     bullet.y += 5;
+}
+function bulletHitsInvader(bullet, invader){
+    let d = dist(bullet.x, bullet.y, invader.x, invader.y)
+    return d < bullet.r + invader.r
 }
