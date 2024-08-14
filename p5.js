@@ -8,6 +8,9 @@ let invaderBullets = [];
 let invanderShootingFrequency= 0.05;
 let maxInvaderBullets = 5;
 
+let gameOver = false;
+let gameWon  = false;
+let message  = ""
 
 function preload(){
     // Code to run before the rest of the sketch.
@@ -26,6 +29,24 @@ function setup() {
 
 function draw(){
     //Code to run repeatedly
+    //game over or win
+
+    if(gameOver || gameWon){
+        background(0);
+        if(gameOver){
+            fill(255, 0 , 0);
+            message = "!!!YOU LOSE :`^(!!!"
+        }else{
+            fill(118, 240, 19);
+            message= "!!!YOU WIN :^)!!!";
+        }
+        textFont('Press Start 2P');
+        textSize(32);
+        textAlign(CENTER, CENTER);
+        text(message, width / 2, height / 2);
+        // Return Finish the game
+        return
+    }
     background(0);
     showPlayer(player);
     movePlayer(player);
@@ -37,6 +58,9 @@ function draw(){
             if(bulletHitsInvader(bullets[i], invaders[j])){
                 invaders.splice(j, 1)
                 bullets.splice(i, 1)
+                if(invaders.length === 0){
+                    gameWon = true;
+                }
                 break
             }
         }
@@ -60,6 +84,10 @@ function draw(){
     for( let i = invaderBullets.length -1; i >= 0; i--){
         showBullet(invaderBullets[i])
         moveInvaderBullet(invaderBullets[i])
+        if(bulletHitsPlayer(invaderBullets[i], player)){
+            // Game Over
+            gameOver = true;
+        }
         if(invaderBullets[i].y > height){
             invaderBullets.splice(i, 1)
         }
@@ -123,6 +151,12 @@ function showBullet(bullet){
 
 function moveBullet(bullet){
     bullet.y -= 7
+}
+
+function bulletHitsPlayer(invaderBullet, player){
+    let d = dist(invaderBullet.x, invaderBullet.y, player.x + player.w / 2, player.y + player.h / 2);
+
+    return d < invaderBullet.r + player.w / 2;
 }
 // Invaders
 
